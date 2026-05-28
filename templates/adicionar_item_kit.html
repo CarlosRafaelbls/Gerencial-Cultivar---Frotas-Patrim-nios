@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Adicionar Itens ao Kit</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .linha-ferramenta {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .nome-ferramenta {
+        flex: 1;
+    }
+
+    .quantidade-input {
+        width: 100px;
+    }
+
+    .lista-ferramentas {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: white;
+    }
+</style>
+</head>
+
+<body class="bg-light">
+<div class="container mt-4" style="max-width: 900px;">
+
+    <div class="card p-4 shadow-sm">
+        <h2 class="mb-4">Adicionar Itens ao Kit</h2>
+
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Pesquisar ferramenta</label>
+                <input type="text" id="buscarFerramenta" class="form-control" placeholder="Digite o nome ou código da ferramenta">
+            </div>
+<div class="mb-3">
+    <label class="form-label">Ordenar por</label>
+    <select id="ordenarFerramentas" class="form-select">
+        <option value="nome_asc">Nome (A → Z)</option>
+        <option value="nome_desc">Nome (Z → A)</option>
+        <option value="codigo_asc">Código (A → Z)</option>
+    </select>
+</div>
+            <div class="mb-3">
+                <label class="form-label">Ferramentas</label>
+                <div class="lista-ferramentas" id="listaFerramentas">
+                    {% for ferramenta in ferramentas %}
+                    <div class="linha-ferramenta ferramenta-item" data-texto="{{ ferramenta[1]|lower }} {{ ferramenta[2]|lower }}">
+                        <input type="checkbox" name="ferramenta_id" value="{{ ferramenta[0] }}">
+                        <div class="nome-ferramenta">
+                            <strong>{{ ferramenta[1] }}</strong> - {{ ferramenta[2] }}
+                        </div>
+                        <input
+                            type="number"
+                            name="quantidade_{{ ferramenta[0] }}"
+                            class="form-control quantidade-input"
+                            min="0"
+                            value="0"
+                            placeholder="Qtd"
+                        >
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Estado Inicial</label>
+                <select name="estado_inicial" class="form-select" required>
+                    <option value="Boa">Boa</option>
+                    <option value="Usada">Usada</option>
+                    <option value="Danificada">Danificada</option>
+                    <option value="Incompleta">Incompleta</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Observação</label>
+                <textarea name="observacao" class="form-control"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success">Salvar Itens</button>
+            <a href="/kit/{{ kit_id }}" class="btn btn-secondary">Voltar</a>
+        </form>
+    </div>
+
+</div>
+
+<script>
+document.getElementById("buscarFerramenta").addEventListener("keyup", function() {
+    let filtro = this.value.toLowerCase();
+    let itens = document.querySelectorAll(".ferramenta-item");
+
+    itens.forEach(function(item) {
+        let texto = item.getAttribute("data-texto");
+        if (texto.includes(filtro)) {
+            item.style.display = "flex";
+        } else {
+            item.style.display = "none";
+        }
+    });
+});
+</script>
+
+</body>
+</html>
+<script>
+const buscarInput = document.getElementById("buscarFerramenta");
+const lista = document.getElementById("listaFerramentas");
+const ordenarSelect = document.getElementById("ordenarFerramentas");
+
+function filtrar() {
+    let filtro = buscarInput.value.toLowerCase();
+    let itens = document.querySelectorAll(".ferramenta-item");
+
+    itens.forEach(function(item) {
+        let texto = item.getAttribute("data-texto");
+        item.style.display = texto.includes(filtro) ? "flex" : "none";
+    });
+}
+
+function ordenar() {
+    let itens = Array.from(document.querySelectorAll(".ferramenta-item"));
+    let tipo = ordenarSelect.value;
+
+    itens.sort((a, b) => {
+        let nomeA = a.querySelector(".nome-ferramenta").innerText.toLowerCase();
+        let nomeB = b.querySelector(".nome-ferramenta").innerText.toLowerCase();
+
+        if (tipo === "nome_asc") return nomeA.localeCompare(nomeB);
+        if (tipo === "nome_desc") return nomeB.localeCompare(nomeA);
+
+        if (tipo === "codigo_asc") {
+            let codA = nomeA.split("-")[1] || "";
+            let codB = nomeB.split("-")[1] || "";
+            return codA.localeCompare(codB);
+        }
+
+        return 0;
+    });
+
+    itens.forEach(item => lista.appendChild(item));
+}
+
+buscarInput.addEventListener("keyup", filtrar);
+ordenarSelect.addEventListener("change", ordenar);
+</script>

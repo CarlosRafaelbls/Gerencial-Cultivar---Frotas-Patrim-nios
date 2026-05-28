@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <h1 class="fw-bold mb-1">
+        🚜 Painel Geral da Frota
+    </h1>
+
+    <p class="text-muted mb-4">
+        Controle operacional da Cultivar Máquinas
+    </p>
+
+    <div class="row">
+
+        <!-- TOTAL -->
+        <div class="col-md-3 mb-4">
+            <div class="card bg-primary text-white border-0 shadow rounded-4">
+                <div class="card-body">
+                    <h5>Total de Veículos</h5>
+
+                    <h1 class="fw-bold">
+                        {{ total_veiculos }}
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- DISPONÍVEIS -->
+        <div class="col-md-3 mb-4">
+            <div class="card bg-success text-white border-0 shadow rounded-4">
+                <div class="card-body">
+                    <h5>Disponíveis</h5>
+
+                    <h1 class="fw-bold">
+                        {{ disponiveis }}
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- EM USO -->
+        <div class="col-md-3 mb-4">
+            <div class="card bg-warning border-0 shadow rounded-4">
+                <div class="card-body">
+                    <h5>Em Uso</h5>
+
+                    <h1 class="fw-bold">
+                        {{ em_uso }}
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- MANUTENÇÃO -->
+        <div class="col-md-3 mb-4">
+            <div class="card bg-danger text-white border-0 shadow rounded-4">
+                <div class="card-body">
+                    <h5>Em Manutenção</h5>
+
+                    <h1 class="fw-bold">
+                        {{ manutencao }}
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- GRÁFICOS -->
+    <div class="row">
+
+        <!-- GRÁFICO -->
+        <div class="col-md-6 mb-4">
+
+            <div class="card shadow border-0 rounded-4 h-100">
+
+                <div class="card-header bg-dark text-white rounded-top-4">
+                    📊 Status da Frota
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="graficoStatus"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RESUMO -->
+        <div class="col-md-6 mb-4">
+
+            <div class="card shadow border-0 rounded-4 h-100">
+
+                <div class="card-header bg-success text-white rounded-top-4">
+                    🚗 Resumo Operacional
+                </div>
+
+                <div class="card-body">
+
+                    <h5>Veículos Disponíveis</h5>
+
+                    <div class="progress mb-4" style="height:25px;">
+                        <div class="progress-bar bg-success"
+                             style="width: {{ (disponiveis / total_veiculos * 100) if total_veiculos > 0 else 0 }}%">
+                            {{ disponiveis }}
+                        </div>
+                    </div>
+
+                    <h5>Veículos em Uso</h5>
+
+                    <div class="progress mb-4" style="height:25px;">
+                        <div class="progress-bar bg-warning text-dark"
+                             style="width: {{ (em_uso / total_veiculos * 100) if total_veiculos > 0 else 0 }}%">
+                            {{ em_uso }}
+                        </div>
+                    </div>
+
+                    <h5>Em Manutenção</h5>
+
+                    <div class="progress mb-4" style="height:25px;">
+                        <div class="progress-bar bg-danger"
+                             style="width: {{ (manutencao / total_veiculos * 100) if total_veiculos > 0 else 0 }}%">
+                            {{ manutencao }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx = document.getElementById('graficoStatus');
+
+new Chart(ctx, {
+
+    type: 'doughnut',
+
+    data: {
+
+        labels: {{ labels_status | tojson }},
+
+        datasets: [{
+
+            label: 'Veículos',
+
+            data: {{ valores_status | tojson }},
+
+            backgroundColor: [
+                '#16a34a',
+                '#eab308',
+                '#dc2626',
+                '#2563eb'
+            ],
+
+            borderWidth: 2
+
+        }]
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+                position: 'bottom'
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

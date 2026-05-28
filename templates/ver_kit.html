@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Detalhes do Kit</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+<div class="container mt-4">
+
+    <h2 class="mb-3">Detalhes do Kit</h2>
+
+    {% if kit %}
+    <div class="card p-3 mb-4">
+        <p><strong>ID:</strong> {{ kit[0] }}</p>
+        <p><strong>Nome do Kit:</strong> {{ kit[1] }}</p>
+        <p><strong>Técnico:</strong> {{ kit[2] }}</p>
+        <p><strong>Data:</strong> {{ kit[3] }}</p>
+        <p><strong>Status:</strong> {{ kit[4] }}</p>
+
+        <div class="mb-3">
+            <a href="/adicionar_item_kit/{{ kit[0] }}" class="btn btn-success">Adicionar Item</a>
+            <a href="/editar_kit/{{ kit[0] }}" class="btn btn-warning">Editar Kit</a>
+            <a href="/relatorio_entrega_kit/{{ kit[0] }}" class="btn btn-dark">
+                {% if kit[5] %}
+                    Ver Relatório
+                {% else %}
+                    Gerar Relatório
+                {% endif %}
+            </a>
+            <a href="/baixar_relatorio_kit/{{ kit[0] }}" class="btn btn-danger">Baixar PDF</a>
+            <a href="/kits" class="btn btn-secondary">Voltar</a>
+        </div>
+
+        {% if kit[5] %}
+        <hr>
+        <h5>Relatório de Entrega</h5>
+
+        <p><strong>Data da Entrega:</strong> {{ kit[5] }}</p>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Assinatura do Técnico</strong></p>
+                <img src="/static/assinaturas_kits/{{ kit[6] }}" style="max-width:100%; border:1px solid #000;">
+            </div>
+
+            <div class="col-md-6">
+                <p><strong>Assinatura do Responsável</strong></p>
+                <img src="/static/assinaturas_kits/{{ kit[7] }}" style="max-width:100%; border:1px solid #000;">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>ID</th>
+            <th>Ferramenta</th>
+            <th>Código</th>
+            <th>Quantidade</th>
+            <th>Estado Inicial</th>
+            <th>Observação</th>
+            <th>Editar</th>
+            <th>Excluir</th>
+        </tr>
+
+        {% for item in itens %}
+        <tr>
+            <td>{{ item[0] }}</td>
+            <td>{{ item[1] }}</td>
+            <td>{{ item[2] }}</td>
+            <td>{{ item[3] }}</td>
+            <td>{{ item[4] }}</td>
+            <td>{{ item[5] }}</td>
+            <td><a href="/editar_item_kit/{{ item[0] }}" class="btn btn-sm btn-warning">Editar</a></td>
+            <td><a href="/excluir_item_kit/{{ item[0] }}" class="btn btn-sm btn-danger">Excluir</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+</div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Retirar Ferramenta</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    #assinaturaCanvas {
+        border: 1px solid #000;
+        width: 100%;
+        max-width: 500px;
+        height: 200px;
+        background-color: white;
+    }
+</style>
+</head>
+
+<body class="bg-light">
+<div class="container mt-4">
+
+    <h2 class="mb-4">Retirar Ferramenta</h2>
+
+    <form method="post" class="card p-4 shadow-sm" onsubmit="salvarAssinatura()">
+        <div class="mb-3">
+            <label for="tecnico" class="form-label">Selecione o técnico</label>
+            <select name="tecnico" id="tecnico" class="form-select" required>
+                <option value="">-- Escolha um técnico --</option>
+                {% for tecnico in tecnicos %}
+                <option value="{{ tecnico[1] }}">{{ tecnico[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Assinatura do técnico</label><br>
+            <canvas id="assinaturaCanvas"></canvas>
+            <input type="hidden" name="assinatura" id="assinatura">
+        </div>
+
+        <div class="mb-3">
+            <button type="button" class="btn btn-secondary" onclick="limparCanvas()">Limpar Assinatura</button>
+        </div>
+
+        <button type="submit" class="btn btn-success">Confirmar Retirada</button>
+        <a href="/" class="btn btn-secondary">Voltar</a>
+    </form>
+
+</div>
+
+<script>
+const canvas = document.getElementById("assinaturaCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = 500;
+canvas.height = 200;
+
+let desenhando = false;
+
+function getPos(event) {
+    const rect = canvas.getBoundingClientRect();
+    if (event.touches) {
+        return {
+            x: event.touches[0].clientX - rect.left,
+            y: event.touches[0].clientY - rect.top
+        };
+    }
+    return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+    };
+}
+
+function iniciar(event) {
+    desenhando = true;
+    const pos = getPos(event);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    event.preventDefault();
+}
+
+function desenhar(event) {
+    if (!desenhando) return;
+    const pos = getPos(event);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    event.preventDefault();
+}
+
+function parar(event) {
+    desenhando = false;
+    event.preventDefault();
+}
+
+canvas.addEventListener("mousedown", iniciar);
+canvas.addEventListener("mousemove", desenhar);
+canvas.addEventListener("mouseup", parar);
+canvas.addEventListener("mouseleave", parar);
+
+canvas.addEventListener("touchstart", iniciar);
+canvas.addEventListener("touchmove", desenhar);
+canvas.addEventListener("touchend", parar);
+
+function limparCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function salvarAssinatura() {
+    const assinatura = canvas.toDataURL("image/png");
+    document.getElementById("assinatura").value = assinatura;
+}
+</script>
+
+</body>
+</html>

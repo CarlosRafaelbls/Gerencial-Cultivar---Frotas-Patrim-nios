@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Relatório de Entrega do Kit</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .assinatura-canvas {
+        border: 1px solid #000;
+        width: 100%;
+        max-width: 450px;
+        height: 180px;
+        background: #fff;
+    }
+</style>
+</head>
+
+<body class="bg-light">
+<div class="container mt-4">
+
+    <div class="card p-4 shadow-sm">
+        <h2 class="mb-4">Relatório de Entrega do Kit</h2>
+
+        {% if kit %}
+        <p><strong>ID do Kit:</strong> {{ kit[0] }}</p>
+        <p><strong>Nome do Kit:</strong> {{ kit[1] }}</p>
+        <p><strong>Técnico:</strong> {{ kit[2] }}</p>
+        <p><strong>Data de Criação:</strong> {{ kit[3] }}</p>
+        <p><strong>Status:</strong> {{ kit[4] }}</p>
+
+        <table class="table table-bordered table-striped mt-4">
+            <tr>
+                <th>Ferramenta</th>
+                <th>Código</th>
+                <th>Quantidade</th>
+                <th>Estado Inicial</th>
+                <th>Observação</th>
+            </tr>
+
+            {% for item in itens %}
+            <tr>
+                <td>{{ item[1] }}</td>
+                <td>{{ item[2] }}</td>
+                <td>{{ item[3] }}</td>
+                <td>{{ item[4] }}</td>
+                <td>{{ item[5] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <form method="post" onsubmit="return salvarAssinaturas()">
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <label class="form-label"><strong>Assinatura do Técnico</strong></label>
+                    <canvas id="canvasTecnico" class="assinatura-canvas"></canvas>
+                    <input type="hidden" name="assinatura_tecnico" id="assinatura_tecnico">
+                    <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="limparCanvas('canvasTecnico')">Limpar</button>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label"><strong>Assinatura do Responsável</strong></label>
+                    <canvas id="canvasResponsavel" class="assinatura-canvas"></canvas>
+                    <input type="hidden" name="assinatura_responsavel" id="assinatura_responsavel">
+                    <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="limparCanvas('canvasResponsavel')">Limpar</button>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success">Salvar Relatório</button>
+                <a href="/kit/{{ kit[0] }}" class="btn btn-secondary">Voltar</a>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+
+</div>
+
+<script>
+function configurarCanvas(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = 450;
+    canvas.height = 180;
+
+    let desenhando = false;
+
+    function getPos(event) {
+        const rect = canvas.getBoundingClientRect();
+        if (event.touches) {
+            return {
+                x: event.touches[0].clientX - rect.left,
+                y: event.touches[0].clientY - rect.top
+            };
+        }
+        return {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top
+        };
+    }
+
+    function iniciar(event) {
+        desenhando = true;
+        const pos = getPos(event);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+        event.preventDefault();
+    }
+
+    function desenhar(event) {
+        if (!desenhando) return;
+        const pos = getPos(event);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        event.preventDefault();
+    }
+
+    function parar(event) {
+        desenhando = false;
+        event.preventDefault();
+    }
+
+    canvas.addEventListener("mousedown", iniciar);
+    canvas.addEventListener("mousemove", desenhar);
+    canvas.addEventListener("mouseup", parar);
+    canvas.addEventListener("mouseleave", parar);
+
+    canvas.addEventListener("touchstart", iniciar);
+    canvas.addEventListener("touchmove", desenhar);
+    canvas.addEventListener("touchend", parar);
+}
+
+function limparCanvas(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function salvarAssinaturas() {
+    const canvasTecnico = document.getElementById("canvasTecnico");
+    const canvasResponsavel = document.getElementById("canvasResponsavel");
+
+    document.getElementById("assinatura_tecnico").value = canvasTecnico.toDataURL("image/png");
+    document.getElementById("assinatura_responsavel").value = canvasResponsavel.toDataURL("image/png");
+
+    return true;
+}
+
+configurarCanvas("canvasTecnico");
+configurarCanvas("canvasResponsavel");
+</script>
+
+</body>
+</html>

@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <!-- TÍTULO -->
+    <div class="mb-4">
+        <h1 class="fw-bold">
+            📊 Relatórios da Frota
+        </h1>
+    </div>
+
+    <!-- CARDS -->
+    <div class="row mb-4">
+
+        <!-- TOTAL GASTO -->
+        <div class="col-md-4">
+
+            <div class="card bg-danger text-white shadow-lg border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h5>Total Gasto</h5>
+
+                    <h2>
+                        R$ {{
+                        "{:,.2f}".format(total_gasto)
+                        .replace(",", "X")
+                        .replace(".", ",")
+                        .replace("X", ".")
+                        }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TOTAL SERVIÇOS -->
+        <div class="col-md-4">
+
+            <div class="card bg-primary text-white shadow-lg border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h5>Total de Serviços</h5>
+
+                    <h2>
+                        {{ gastos_detalhados|length }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+       <!-- MÉDIA -->
+<div class="col-md-4">
+
+    <div class="card bg-success text-white shadow-lg border-0 rounded-4">
+
+        <div class="card-body">
+
+            <h5>Média por Serviço</h5>
+
+            <h2>
+
+                R$ {{
+
+                "{:,.2f}".format(
+
+                    total_gasto / gastos_detalhados|length
+
+                    if gastos_detalhados|length > 0
+
+                    else 0
+
+                )
+
+                .replace(",", "X")
+
+                .replace(".", ",")
+
+                .replace("X", ".")
+
+                }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+    <!-- GRÁFICO -->
+    <div class="row mb-4">
+
+    <div class="col-md-12">
+
+            <div class="card shadow-lg border-0 rounded-4 mb-4">
+
+                <div class="card-header bg-dark text-white rounded-top-4">
+
+                    <h5 class="mb-0">
+                        📊 Gráfico de Gastos por Veículo
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div style="height: 420px;">
+
+                        <canvas id="graficoGastos"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+  <!-- TABELA -->
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div class="card shadow-lg border-0 rounded-4">
+
+            <div class="card-header bg-dark text-white rounded-top-4">
+
+                <h5 class="mb-0">
+                    🔧 Gastos Detalhados
+                </h5>
+
+            </div>
+
+            <div class="card-body table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>Veículo</th>
+                            <th>Descrição</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for gasto in gastos_detalhados %}
+
+                        <tr>
+
+                            <!-- VEÍCULO + PLACA -->
+                            <td>
+
+                                <strong>
+                                    {{ gasto[0] }}
+                                </strong>
+
+                                <br>
+
+                                <small class="text-muted">
+                                    {{ gasto[1] }}
+                                </small>
+
+                            </td>
+
+                            <!-- DESCRIÇÃO -->
+                            <td>
+
+                                {{ gasto[2] }}
+
+                            </td>
+
+                            <!-- VALOR -->
+                            <td>
+
+                                <span class="badge bg-danger fs-6">
+
+                                    R$ {{
+
+                                    "{:,.2f}".format(gasto[3])
+
+                                    .replace(",", "X")
+
+                                    .replace(".", ",")
+
+                                    .replace("X", ".")
+
+                                    }}
+
+                                </span>
+
+                            </td>
+
+                            <!-- DATA -->
+                            <td>
+
+                                {{ gasto[4] }}
+
+                            </td>
+
+                            <!-- STATUS -->
+                            <td>
+
+                                {% if gasto[5] == 'Pago' %}
+
+                                    <span class="badge bg-success fs-6">
+                                        Pago
+                                    </span>
+
+                                {% elif gasto[5] == 'Pendente' %}
+
+                                    <span class="badge bg-warning text-dark fs-6">
+                                        Pendente
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger fs-6">
+                                        Vencido
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- AÇÕES -->
+                            <td>
+
+                                {% if gasto[5] != 'Pago' %}
+
+                                    <a href="/pagar/{{ gasto[6] }}"
+                                       class="btn btn-success btn-sm rounded-pill">
+
+                                        ✅ Pagar
+
+                                    </a>
+
+                                {% else %}
+
+                                    <button class="btn btn-secondary btn-sm rounded-pill" disabled>
+
+                                        ✔ Pago
+
+                                    </button>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+<!-- CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+
+var labels_gastos = JSON.parse('{{ labels_gastos | tojson | safe }}');
+
+var valores_gastos = JSON.parse('{{ valores_gastos | tojson | safe }}');
+
+const ctx = document.getElementById('graficoGastos');
+
+new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: labels_gastos,
+
+        datasets: [{
+
+            label: 'Total de Gastos (R$)',
+
+            data: valores_gastos,
+
+            backgroundColor: [
+
+                '#2563eb',
+                '#16a34a',
+                '#dc2626',
+                '#eab308',
+                '#7c3aed',
+                '#0891b2',
+                '#f97316'
+
+            ],
+
+            borderRadius: 10
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

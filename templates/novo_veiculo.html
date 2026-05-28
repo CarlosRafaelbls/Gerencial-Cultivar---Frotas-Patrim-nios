@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">🚗 Novo Veículo</h2>
+
+<button onclick="history.back()" class="btn btn-outline-secondary mb-3">
+    ⬅ Voltar
+</button>
+
+<div class="card shadow p-4" style="max-width: 500px;">
+
+    <form method="POST">
+
+        <div class="mb-3">
+            <label>Nome</label>
+            <input type="text" name="nome" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Placa</label>
+            <input type="text" name="placa" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">
+            Salvar Veículo
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

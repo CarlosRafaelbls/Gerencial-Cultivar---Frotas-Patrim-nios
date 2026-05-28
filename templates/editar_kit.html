@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Editar Kit</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+<div class="container mt-4" style="max-width: 700px;">
+
+    <div class="card p-4 shadow-sm">
+        <h2 class="mb-4">Editar Kit</h2>
+
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Nome do Kit</label>
+                <input type="text" name="nome_kit" value="{{ kit[2] }}" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Técnico</label>
+                <select name="tecnico_id" class="form-select" required>
+                    {% for tecnico in tecnicos %}
+                    <option value="{{ tecnico[0] }}" {% if tecnico[0] == kit[1] %}selected{% endif %}>
+                        {{ tecnico[1] }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-select" required>
+                    <option value="Ativo" {% if kit[4] == 'Ativo' %}selected{% endif %}>Ativo</option>
+                    <option value="Inativo" {% if kit[4] == 'Inativo' %}selected{% endif %}>Inativo</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Salvar</button>
+            <a href="/kits" class="btn btn-secondary">Voltar</a>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

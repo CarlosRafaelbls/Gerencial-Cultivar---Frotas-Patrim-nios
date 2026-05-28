@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Controle de Ferramentas</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card-dashboard bg-primary">
+            <h5>Ferramentas</h5>
+            <h2>{{ total_ferramentas }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card-dashboard bg-success">
+            <h5>Disponíveis</h5>
+            <h2>{{ disponiveis }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card-dashboard bg-danger">
+            <h5>Em Uso</h5>
+            <h2>{{ em_uso }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card-dashboard bg-warning">
+            <h5>Veículos</h5>
+            <h2>{{ total_veiculos }}</h2>
+        </div>
+    </div>
+
+</div>
+<body class="bg-light">
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Controle de Ferramentas Cultivar Máquinas </h2>
+
+        <div class="mb-3">
+    <a href="/nova_ferramenta" class="btn btn-primary">Nova Ferramenta</a>
+    <a href="/historico" class="btn btn-secondary">Ver Histórico</a>
+    <a href="/tecnicos" class="btn btn-info">Técnicos</a>
+    <a href="/kits" class="btn btn-success">Kits Mecânico</a>
+    <a href="/importar_ferramentas" class="btn btn-dark">Importar Ferramentas</a>
+    <a href="/alterar_senha" class="btn btn-warning">Alterar Senha</a>
+    <a href="/logout" class="btn btn-dark">Sair</a>
+    <a href="/veiculos" class="btn btn-dark">🚗 Veículos</a>
+</div>
+    </div>
+
+    <table class="table table-bordered table-striped align-middle">
+        <tr>
+            <th>ID</th>
+            <th>Foto</th>
+            <th>Nome</th>
+            <th>Código</th>
+            <th>Status</th>
+            <th>Técnico</th>
+            <th>Retirada</th>
+            <th>Devolução</th>
+            <th>Ação</th>
+            <th>Excluir</th>
+            <th>Editar</th>
+        </tr>
+
+        {% for ferramenta in ferramentas %}
+        <tr>
+            <td>{{ ferramenta[0] }}</td>
+
+            <td>
+                {% if ferramenta[7] %}
+                    <img src="{{ url_for('static', filename='uploads/' + ferramenta[7]) }}" width="80">
+                {% else %}
+                    Sem foto
+                {% endif %}
+            </td>
+
+            <td>{{ ferramenta[1] }}</td>
+            <td>{{ ferramenta[2] }}</td>
+
+            <td>
+                {% if ferramenta[3] == "Disponível" %}
+                    <span class="badge bg-success">Disponível</span>
+                {% else %}
+                    <span class="badge bg-danger">Em uso</span>
+                {% endif %}
+            </td>
+
+            <td>{{ ferramenta[4] }}</td>
+            <td>{{ ferramenta[5] }}</td>
+            <td>{{ ferramenta[6] }}</td>
+
+            <td>
+                {% if ferramenta[3] == "Disponível" %}
+                    <a href="/retirar/{{ ferramenta[0] }}" class="btn btn-success btn-sm">Retirar</a>
+                {% else %}
+                    <a href="/devolver/{{ ferramenta[0] }}" class="btn btn-warning btn-sm">Devolver</a>
+                {% endif %}
+            </td>
+
+            <td>
+                <a href="/excluir_ferramenta/{{ ferramenta[0] }}" class="btn btn-danger btn-sm">Excluir</a>
+            </td>
+
+            <td>
+                <a href="/editar_ferramenta/{{ ferramenta[0] }}" class="btn btn-primary btn-sm">Editar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+</body>
+</html>

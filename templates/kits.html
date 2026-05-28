@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Kits do Mecânico</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+<div class="container mt-4">
+
+    <h2 class="mb-4">Kits do Mecânico</h2>
+
+    <div class="mb-3">
+        <a href="/novo_kit" class="btn btn-primary">Novo Kit</a>
+        <a href="/" class="btn btn-secondary">Voltar</a>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>ID</th>
+            <th>Nome do Kit</th>
+            <th>Técnico</th>
+            <th>Data de Criação</th>
+            <th>Status</th>
+            <th>Ver</th>
+            <th>Editar</th>
+            <th>Excluir</th>
+        </tr>
+
+        {% for kit in kits %}
+        <tr>
+            <td>{{ kit[0] }}</td>
+            <td>{{ kit[1] }}</td>
+            <td>{{ kit[2] }}</td>
+            <td>{{ kit[3] }}</td>
+            <td>{{ kit[4] }}</td>
+            <td><a href="/kit/{{ kit[0] }}" class="btn btn-sm btn-primary">Abrir</a></td>
+            <td><a href="/editar_kit/{{ kit[0] }}" class="btn btn-sm btn-warning">Editar</a></td>
+            <td><a href="/excluir_kit/{{ kit[0] }}" class="btn btn-sm btn-danger">Excluir</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+</body>
+</html>

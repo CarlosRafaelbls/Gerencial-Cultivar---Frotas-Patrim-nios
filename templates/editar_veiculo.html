@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow p-4">
+
+        <h2>🚗 Editar Veículo</h2>
+
+        <form method="POST">
+
+            <div class="mb-3">
+                <label>Nome</label>
+
+                <input type="text"
+                       name="nome"
+                       class="form-control"
+                       value="{{ veiculo[1] }}"
+                       required>
+            </div>
+
+            <div class="mb-3">
+                <label>Placa</label>
+
+                <input type="text"
+                       name="placa"
+                       class="form-control"
+                       value="{{ veiculo[2] }}"
+                       required>
+            </div>
+
+            <div class="mb-3">
+
+                <label>Status</label>
+
+                <select name="status"
+                        class="form-control">
+
+                    <option value="Disponível">
+                        Disponível
+                    </option>
+
+                    <option value="Em uso">
+                        Em uso
+                    </option>
+
+                    <option value="Manutenção">
+                        Manutenção
+                    </option>
+
+                </select>
+
+            </div>
+
+            <button class="btn btn-success">
+                Salvar Alterações
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

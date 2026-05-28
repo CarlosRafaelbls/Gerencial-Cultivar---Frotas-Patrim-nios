@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h3 class="mb-0">
+                🔧 Detalhes da Manutenção
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <!-- VEÍCULO -->
+            <h4 class="fw-bold">
+                {{ manutencao[0] }}
+            </h4>
+
+            <!-- PLACA -->
+            <p>
+                <strong>Placa:</strong>
+                {{ manutencao[1] }}
+            </p>
+
+            <!-- SERVIÇO -->
+            <p>
+                <strong>Serviço:</strong>
+                {{ manutencao[2] }}
+            </p>
+
+            <!-- VALOR -->
+            <p>
+                <strong>Valor:</strong>
+
+                <span class="badge bg-danger fs-6">
+
+                    R$
+                    {{ "{:,.2f}".format(manutencao[3]).replace(",", "X").replace(".", ",").replace("X", ".") }}
+
+                </span>
+            </p>
+
+            <!-- DATA -->
+            <p>
+                <strong>Data:</strong>
+                {{ manutencao[4] }}
+            </p>
+
+            <!-- STATUS -->
+            <p>
+
+                <strong>Status:</strong>
+
+                {% if manutencao[5] == 'Pago' %}
+
+                    <span class="badge bg-success">
+                        Pago
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-warning text-dark">
+                        Pendente
+                    </span>
+
+                {% endif %}
+
+            </p>
+
+            <!-- BOTÕES -->
+            <div class="mt-4">
+
+                <a href="/relatorios"
+                   class="btn btn-secondary">
+
+                    ← Voltar
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

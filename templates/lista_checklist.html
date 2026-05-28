@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">
+        📋 Histórico de Checklist
+    </h2>
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Veículo</th>
+                        <th>Condutor</th>
+                        <th>Tipo</th>
+                        <th>KM</th>
+                        <th>Data</th>
+                        <th>Resumo</th>
+                        <th>Ações</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for c in lista %}
+
+                <tr class="{% if c.problema > 0 %}table-danger{% else %}table-success{% endif %}">
+
+                    <td>{{ c.veiculo }}</td>
+
+                    <td>{{ c.tecnico }}</td>
+
+                    <td>
+                        <span class="badge bg-dark">
+                            {{ c.tipo }}
+                        </span>
+                    </td>
+
+                    <td>{{ c.km }}</td>
+
+                    <td>{{ c.data }}</td>
+
+                    <td>
+
+                        <span class="badge bg-success">
+                            ✔ {{ c.ok }}
+                        </span>
+
+                        <span class="badge bg-danger">
+                            ❌ {{ c.problema }}
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <a href="/checklist_detalhe/{{ c.id }}"
+                           class="btn btn-sm btn-dark">
+
+                           Ver
+                        </a>
+
+                        <a href="/deletar_checklist/{{ c.id }}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Tem certeza que deseja excluir este checklist?')">
+
+                           Excluir
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

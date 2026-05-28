@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>🚗 Veículos</h2>
+
+    <a href="/novo_veiculo"
+       class="btn btn-success mb-3">
+
+       + Novo Veículo
+    </a>
+
+    <table class="table table-striped table-hover">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Placa</th>
+                <th>Status</th>
+                <th>Ações</th>
+                <th>Condutor</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for v in veiculos %}
+
+        <tr>
+
+            <td>{{ v[0] }}</td>
+
+            <td>{{ v[1] }}</td>
+
+            <td>{{ v[2] }}</td>
+
+            <td>{{ v[3] }}</td>
+
+            <td>{{ v[4] }}</td>
+
+            <td>
+
+    {% if v[4] %}
+        <span class="badge bg-dark">
+            {{ v[4] }}
+        </span>
+    {% else %}
+        <span class="badge bg-secondary">
+            Sem condutor
+        </span>
+    {% endif %}
+
+</td>
+
+            <td>
+
+                {% if v[3] == "Disponível" %}
+
+                    <span class="badge bg-success">
+                        Disponível
+                    </span>
+
+                {% elif v[3] == "Em uso" %}
+
+                    <span class="badge bg-primary">
+                        Em uso
+                    </span>
+
+                {% elif v[3] == "Pendente manutenção" %}
+
+                    <span class="badge bg-warning text-dark">
+                        Pendente
+                    </span>
+
+                {% elif v[3] == "Manutenção" %}
+
+                    <span class="badge bg-danger">
+                        Manutenção
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                {% if v[3] == "Disponível" %}
+
+                    <a href="/checklist/{{ v[0] }}/retirada"
+                       class="btn btn-primary btn-sm">
+
+                       Retirar
+                    </a>
+
+                {% elif v[3] == "Em uso" %}
+
+                    <a href="/checklist/{{ v[0] }}/devolucao"
+                       class="btn btn-warning btn-sm">
+
+                       Devolver
+                    </a>
+
+                {% elif v[3] == "Pendente manutenção" %}
+
+                    <a href="/enviar_manutencao/{{ v[0] }}"
+                       class="btn btn-warning btn-sm">
+
+                       Enviar
+                    </a>
+
+                {% elif v[3] == "Manutenção" %}
+
+                    <a href="/finalizar_manutencao/{{ v[0] }}"
+                       class="btn btn-success btn-sm">
+
+                       Finalizar
+                    </a>
+
+                {% endif %}
+
+                <a href="/nova_manutencao/{{ v[0] }}"
+                   class="btn btn-warning btn-sm">
+
+                   Manutenção
+                </a>
+
+                <a href="/editar_veiculo/{{ v[0] }}"
+                   class="btn btn-primary btn-sm">
+
+                   Editar
+                </a>
+
+                <a href="/excluir_veiculo/{{ v[0] }}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Deseja excluir este veículo?')">
+
+                   Excluir
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
