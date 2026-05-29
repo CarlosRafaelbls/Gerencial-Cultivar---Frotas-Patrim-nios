@@ -6,7 +6,6 @@ database.db
 
 backups/
 
-desktop.ini
 
 .env
 venv/
