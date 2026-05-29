@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+
+database.db
+*.db
+
+backups/
+
+desktop.ini
+
+.env
+venv/
+.venv/
